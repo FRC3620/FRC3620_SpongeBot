@@ -1,101 +1,85 @@
+# Requirements
+
+## Phase 1
+* Log to wpilog input and output motor voltages, currents, and wattages for each of the 4 heaters (H1-H4). They should be logged to 
+```
+H1/input/v
+H1/input/a
+H1/input/w
+H1/output/v
+H1/output/a
+H1/output/w
+H2/input/v
+(etc)
+```
+* Log to wpilog the setpoint of the heaters under
+`H1/setpoint`, `H2/setpoint`, etc.
+* Write a command to repeatedly run the heaters at 0.5 power for 12 seconds, then off for 3 seconds. Put this command on the SmartDashboard.
+* Log to wpilog the power distribution board voltage under `MAIN/v`.
+## Phase 2
+* Fix the testing command to end it's test when the battery voltage gets down to 11.5v.
+## Phase 3
+* Use a camera to look for a Apriltag of a family other than 36H11 (see https://optitag.io/blogs/news/designing-your-perfect-apriltag), pick one that can handle at least a 100 different unique tag ids. If the camera sees a tag, it should log it to `BATTERY/id`.
+You may want to do some testing to see if some tag families work better than others.
+## Phase 4
+* Log to wpilog the power distribution board total current, total power, total energy, under `MAIN/a`, `MAIN/w`, `MAIN/j`.
+* Log to wpilog the current being drawn from the power distribution board channels that have heaters connected under `H1/pdb/a`, `H2/pdb/a`, etc.
+## Phase 5
+* Implement an inboard kill switch.
+
+# Recommended implementation
+
+* Use doglog for your logging. 
+* Create a subsystem class for the heaters.
+* Make sure you declare an instance of the subsystem and create one in `RobotContainer`. There are comments in there to help put things in an appropriate place.
+* Inside the subsystem, make a member variable (declared inside the class, outside any members) to hold all the motor controller:
+```java
+List<TalonSRX> heaters = new ArrayList<>();
+```
+* Inside the constructor, create `TalonSRX` objects for each of the 4 motor controllers. Add them to the `heaters` list.
+Now, if you need do something to all the heaters at once, you can do something like:
+```java
+void setHeaters(double value) {
+  for (var heater : heaters) {
+    heater.set(value);
+  }
+}
+```
+
+* Make a command factory that creates a Command to set all the heaters to a certain power (using the `setHeaters` shown above).
+* Inside the `periodic()` for the subsystem, get information from the motor controllers, and put it out to the log file.
+
+```java
+public void periodic() {
+  for (var heater : heaters) {
+    String name = "H" + heater.getDeviceId();
+
+    double outputCurrent = heater.getOutputCurrent();
+    DogLog.log(name + "/output/a", outputCurrent)'
+
+    // get other information here, and log to Doglog with appropriate names...
+  }
+}
+```
+
+* In `RobotContainer.setSmartDashboardCommands`, create a command that will set the motors to 0.5 power for 12 seconds, then 0 power for 3 seconds. Have it run forever.
+* In `RobotContainer.setSmartDashboardCommands` (or possibly the heater subsystem), create a command that will set the motors to 0 power. Make it the default command for the subsystem.
+
 # IO Assignments
 
 ## Digital IO
-* DIO 0: Practice Bot Jumper
-
+(none)
 
 ## Analog IO
-
+(none)
 
 ## PWM
+(none)
 
+## CAN Bus
 
-## Motor Controllers
-
-
-# CANCoders
-
-
-# PDB assignments
-
-
-# Vision
-
-## Joehan limelight locations
-
-### limelight-front:
-
-
-### limelight-back:
-
-
-
-# Driver Controller
-
-## Slow Drive Mode
-- **Robot Oriented limited to 30% power**
-  - **Xbox Controller**: Hold Left Bumper
-  - **FlySky Controller**: Toggle SWF
-
-## General Controls
-- **NavX Reset (Square Up Robot)**
-  - **Xbox Controller**: Press A Button
-  - **FlySky Controller**: Toggle SWA
-
-## Button Box Mappings
-### ESEF Positioning Commands
-- **A1, C1**
-  - Moves to L1 position
-  - Returns to Home on release
-- **A2, C2**
-  - Moves to L2 position
-  - Returns to Home on release
-- **A3, C3**
-  - Moves to L3 position
-  - Returns to Home on release
-- **A4, C4**
-  - Moves to L4 position
-  - Returns to Home on release
-
-### End Effector Commands
-- **A1, A2, A3, A4, C1, C2, C3, C4 (Right Trigger)**
-  - Runs End Effector until Coral is gone (0.9 speed)
-  - Stops End Effector on release
-
-### Station Pickup Commands
-- **D2**
-  - Moves to Station Pickup Position
-  - Runs End Effector until Coral is detected (0.4 speed)
-- **D3**
-  - Moves to Station Pickup Position
-  - Runs End Effector at 0.2 speed
-
-### Algae Claw Controls
-- **B4**
-  - Moves to Barge Position
-  - Runs End Effector at -0.95 speed
-  - Stops on release
-- **B2**
-  - Moves to Algae L2 Position, runs End Effector (0.45 speed)
-  - After timeout, moves to Algae L2 Remove Position
-  - Returns Home on release
-- **B3**
-  - Moves to Algae L3 Position, runs End Effector (0.45 speed)
-  - After timeout, moves to Algae L3 Remove Position
-  - Returns Home on release
-
-### AFI Subsystem Controls
-- **B1**
-  - Moves Pivot to 15 degrees, runs Roller (0.5 speed)
-  - Moves Pivot to 80 degrees, runs Roller at 0.02 speed
-  - Right Trigger: Runs Roller at -0.5 speed, stops on release
-
-### Climber Commands
-- **D1 (Right Trigger)**
-  - Moves to Climb Position, sets Climber Power to 0.7
-  - Stops Climber on release
-- **D1 (Left Trigger)**
-  - Moves to Climb Position, sets Climber Power to -1
-  - Stops Climber on release
-
-
+### CTRE Talon SRX
+* id 1: heater 1
+* id 2: heater 2
+* id 3: heater 3
+* id 4: heater 4
