@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     // get data logging going
-    DogLog.setOptions(new DogLogOptions().withNtPublish(true));
+    DogLog.setOptions(new DogLogOptions().withNtPublish(true).withLogExtras(true));
     DataLogManager.start();
 
     logger = LoggingMaster.getLogger(getClass());

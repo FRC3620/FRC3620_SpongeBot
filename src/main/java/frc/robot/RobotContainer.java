@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,6 +11,9 @@ import org.usfirst.frc3620.odo.OdoIdsFlySky;
 import org.usfirst.frc3620.odo.OdoIdsXBox;
 import org.usfirst.frc3620.odo.OdoJoystick;
 import org.usfirst.frc3620.odo.OdoJoystick.JoystickType;
+
+import dev.doglog.DogLog;
+
 import org.usfirst.frc3620.CANDeviceFinder;
 import org.usfirst.frc3620.CANDeviceType;
 import org.usfirst.frc3620.RobotMode;
@@ -40,6 +44,7 @@ public class RobotContainer {
   Alert missingDevicesAlert = new Alert("Diagnostics", "", Alert.AlertType.kWarning);
 
   // hardware here...
+  PowerDistribution powerDistribution;
 
   // subsystems here
   HeaterSubsystem heaterSubsystem;
@@ -61,6 +66,11 @@ public class RobotContainer {
     boolean iAmACompetitionRobot = amIACompBot();
     if (!iAmACompetitionRobot) {
       logger.warn("this is a test chassis, will try to deal with missing hardware!");
+    }
+
+    if (canDeviceFinder.isDevicePresent(CANDeviceType.CTRE_PDP, 0)) {
+      powerDistribution = new PowerDistribution(0, ModuleType.kCTRE);
+      DogLog.setPdh(powerDistribution);
     }
 
     makeSubsystems();

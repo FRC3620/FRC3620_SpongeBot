@@ -22,10 +22,7 @@ H2/input/v
 * Use a camera to look for a Apriltag of a family other than 36H11 (see https://optitag.io/blogs/news/designing-your-perfect-apriltag), pick one that can handle at least a 100 different unique tag ids. If the camera sees a tag, it should log it to `BATTERY/id`.
 You may want to do some testing to see if some tag families work better than others.
 ## Phase 4
-* Log to wpilog the power distribution board total current, total power, total energy, under `MAIN/a`, `MAIN/w`, `MAIN/j`.
-* Log to wpilog the current being drawn from the power distribution board channels that have heaters connected under `H1/pdb/a`, `H2/pdb/a`, etc.
-## Phase 5
-* Implement an inboard kill switch.
+* Implement an onboard kill switch.
 
 # Recommended implementation
 
