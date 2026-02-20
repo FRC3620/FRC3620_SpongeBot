@@ -1,0 +1,25 @@
+   5.809962 2026-02-20 01:32:11.993 f.r.Robot INFO I'm alive! FRC3620_SpongeBot 4ddaae84a4628f958460bcfea454d042bc5a8424-dirty Branch=main Build-time="2026-02-19T20:31:56-0500 (Thu)" Build-host="FRC3620-E5470"
+   6.254177 2026-02-20 01:32:12.438 o.u.f.CANDeviceFinder DEBUG calling find()
+   6.782095 2026-02-20 01:32:12.966 f.r.RobotContainer INFO Have device CTRE_PDP 0
+   6.783001 2026-02-20 01:32:12.966 f.r.RobotContainer INFO Have device TALON_PHOENIX5 1
+   6.783272 2026-02-20 01:32:12.967 f.r.RobotContainer INFO Have device TALON_PHOENIX5 2
+   6.783419 2026-02-20 01:32:12.967 f.r.RobotContainer INFO Have device TALON_PHOENIX5 3
+   6.783552 2026-02-20 01:32:12.967 f.r.RobotContainer INFO Have device TALON_PHOENIX5 4
+   8.272938 2026-02-20 01:32:14.456 o.u.f.RobotParametersBase INFO Serial number = '030a8289'
+   8.273343 2026-02-20 01:32:14.457 o.u.f.RobotParametersBase INFO reading frc.robot.RobotParameters from /home/lvuser/deploy/robot_parameters.json
+   9.047801 2026-02-20 01:32:15.231 o.u.f.RobotParametersBase INFO no entry in /home/lvuser/deploy/robot_parameters.json for "030a8289"
+   9.048166 2026-02-20 01:32:15.232 o.u.f.RobotParametersBase INFO making default frc.robot.RobotParameters
+   9.048691 2026-02-20 01:32:15.232 o.u.f.RobotParametersBase INFO robot parameters class frc.robot.RobotParameters: frc.robot.RobotParameters@e8dde3 [serial=[], competitionRobot=false, name=, makeAllCANDevices=false]
+   9.049379 2026-02-20 01:32:15.233 f.r.RobotContainer INFO got parameters for chassis ''
+   9.049793 2026-02-20 01:32:15.233 f.r.RobotContainer WARN this is a test chassis, will try to deal with missing hardware!
+   9.373824 2026-02-20 01:32:15.557 f.r.Robot INFO Switching from INIT to DISABLED
+   9.378765 2026-02-20 01:32:15.562 f.r.Robot INFO CAN bus: [CTRE_PDP 0, TALON_PHOENIX5 1, TALON_PHOENIX5 2, TALON_PHOENIX5 3, TALON_PHOENIX5 4]
+  24.233024 2026-02-20 01:32:30.417 f.r.Robot INFO Switching from DISABLED to TELEOP
+  24.236132 2026-02-20 01:32:30.420 f.r.Robot INFO Alliance Optional[Blue], position OptionalInt[1]
+  24.239486 2026-02-20 01:32:30.423 f.r.Robot INFO Initialized Stopped Motors, subsystems [frc.robot.HeaterSubsystem@194c39]
+  28.496799 2026-02-20 01:32:34.680 f.r.Robot INFO Interrupted Stopped Motors
+  28.498436 2026-02-20 01:32:34.682 f.r.Robot INFO Initialized Repeat(SequentialCommandGroup), subsystems [frc.robot.HeaterSubsystem@194c39]
+1262.316426 2026-02-20 01:53:08.500 f.r.Robot INFO Interrupted Repeat(SequentialCommandGroup)
+1262.336649 2026-02-20 01:53:08.520 f.r.Robot INFO Initialized Stopped Motors, subsystems [frc.robot.HeaterSubsystem@194c39]
+1300.936056 2026-02-20 01:53:47.120 f.r.Robot INFO Switching from TELEOP to DISABLED
+1300.943755 2026-02-20 01:53:47.127 f.r.Robot INFO Interrupted Stopped Motors
