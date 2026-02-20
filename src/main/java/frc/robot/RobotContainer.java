@@ -102,7 +102,7 @@ public class RobotContainer {
     Command command1 = heaterSubsystem.makeSetSpeedCommand(0.5).withTimeout(12);
     Command command2 = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
 
-    Command command3 = command1.andThen(command2).repeatedly();
+    Command command3 = command1.andThen(command2).repeatedly().until(()->RobotController.getBatteryVoltage()<11.5);
     SmartDashboard.putData("command3", command3);
   }
 
