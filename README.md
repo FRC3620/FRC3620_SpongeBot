@@ -12,17 +12,14 @@ H1/output/w
 H2/input/v
 (etc)
 ```
-* Log to wpilog the setpoint of the heaters under
-`H1/setpoint`, `H2/setpoint`, etc.
+* Log to wpilog the setpoint of the heaters under `H1/setpoint`, `H2/setpoint`, etc.
 * Write a command to repeatedly run the heaters at 0.5 power for 12 seconds, then off for 3 seconds. Put this command on the SmartDashboard.
-* Log to wpilog the power distribution board voltage under `MAIN/v`.
 ## Phase 2
 * Fix the testing command to end it's test when the battery voltage gets down to 11.5v.
 ## Phase 3
-* Use a camera to look for a Apriltag of a family other than 36H11 (see https://optitag.io/blogs/news/designing-your-perfect-apriltag), pick one that can handle at least a 100 different unique tag ids. If the camera sees a tag, it should log it to `BATTERY/id`.
-You may want to do some testing to see if some tag families work better than others.
+* Use a camera to look for a Apriltag of family 36H11. If the camera sees a tag with an id that is 200 or greater, it should log it to `BATTERY/id`. You will want to try out the wpilib example for Apriltag recognition.
 ## Phase 4
-* Implement an onboard kill switch.
+* Implement an onboard kill switch. Read a DIO, and while it is true, run a command that puts zero power on the heaters.
 
 # Recommended implementation
 
@@ -31,9 +28,9 @@ You may want to do some testing to see if some tag families work better than oth
 * Make sure you declare an instance of the subsystem and create one in `RobotContainer`. There are comments in there to help put things in an appropriate place.
 * Inside the subsystem, make a member variable (declared inside the class, outside any members) to hold all the motor controller:
 ```java
-List<TalonSRX> heaters = new ArrayList<>();
+List<WPI_TalonSRX> heaters = new ArrayList<>();
 ```
-* Inside the constructor, create `TalonSRX` objects for each of the 4 motor controllers. Add them to the `heaters` list.
+* Inside the constructor, create `WPI_TalonSRX` objects for each of the 4 motor controllers. Add them to the `heaters` list.
 Now, if you need do something to all the heaters at once, you can do something like:
 ```java
 void setHeaters(double value) {
