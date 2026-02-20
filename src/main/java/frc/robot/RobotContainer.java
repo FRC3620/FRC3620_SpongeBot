@@ -20,6 +20,7 @@ import org.usfirst.frc3620.Utilities;
 import org.tinylog.TaggedLogger;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   public final static TaggedLogger logger = LoggingMaster.getLogger(RobotContainer.class);
-
   // need this
   public static CANDeviceFinder canDeviceFinder;
   public static RobotParameters robotParameters;
@@ -42,9 +42,8 @@ public class RobotContainer {
   // hardware here...
 
   // subsystems here
-
+  HeaterSubsystem heaterSubsystem;
   // joysticks here....
-
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -80,6 +79,7 @@ public class RobotContainer {
   }
 
   private void makeSubsystems() {
+    heaterSubsystem = new HeaterSubsystem();
   }
 
   /**
@@ -95,6 +95,15 @@ public class RobotContainer {
 
   private void setupSmartDashboardCommands() {
     // SmartDashboard.putData(new xxxxCommand());
+    SmartDashboard.putData("run motor",
+        heaterSubsystem.makeSetSpeedCommand(0.5).withName("Run Motors").withTimeout(12));
+    heaterSubsystem.setDefaultCommand(heaterSubsystem.makeSetSpeedCommand(0).withName("Stopped Motors"));
+
+    Command command1 = heaterSubsystem.makeSetSpeedCommand(0.5).withTimeout(12);
+    Command command2 = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
+
+    Command command3 = command1.andThen(command2).repeatedly();
+    SmartDashboard.putData("command3", command3);
   }
 
   SendableChooser<Command> chooser = new SendableChooser<>();
