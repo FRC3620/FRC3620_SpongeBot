@@ -14,6 +14,7 @@ H2/input/v
 ```
 * Log to wpilog the setpoint of the heaters under `H1/setpoint`, `H2/setpoint`, etc.
 * Write a command to repeatedly run the heaters at 0.5 power for 12 seconds, then off for 3 seconds. Put this command on the SmartDashboard.
+* Log to wpilog the power distribution board voltage under `MAIN/v`.
 ## Phase 2
 * Fix the testing command to end it's test when the battery voltage gets down to 11.5v.
 ## Phase 3
