@@ -25,6 +25,7 @@ import org.tinylog.TaggedLogger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.util.Elastic;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -109,11 +110,18 @@ public class RobotContainer {
         heaterSubsystem.makeSetSpeedCommand(0.5).withName("Run Motors").withTimeout(12));
     heaterSubsystem.setDefaultCommand(heaterSubsystem.makeSetSpeedCommand(0).withName("Stopped Motors"));
 
-    Command command1 = heaterSubsystem.makeSetSpeedCommand(0.75).withTimeout(12);
-    Command command2 = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
+    Command startHeating = heaterSubsystem.makeSetSpeedCommand(0.75).withTimeout(12);
+    Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
+    Elastic.Notification notification = new Elastic.Notification(Elastic.NotificationLevel.INFO, "Info",
+        "Test Battery Command has ended.");
 
-    Command command3 = command1.andThen(command2).repeatedly().until(()->RobotController.getBatteryVoltage()<10);
-    SmartDashboard.putData("command3", command3);
+      if (RobotController.getBatteryVoltage() < 10) {
+      Elastic.sendNotification(notification.withDisplaySeconds(10.0));
+      }
+    Command testBattery = startHeating.andThen(timeout).repeatedly().until(() -> RobotController.getBatteryVoltage() < 10);
+
+    SmartDashboard.putData("Test Battery", testBattery);
+
   }
 
   SendableChooser<Command> chooser = new SendableChooser<>();
