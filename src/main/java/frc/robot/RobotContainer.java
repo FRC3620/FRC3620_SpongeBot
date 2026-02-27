@@ -112,13 +112,13 @@ public class RobotContainer {
 
     Command startHeating = heaterSubsystem.makeSetSpeedCommand(0.75).withTimeout(12);
     Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
+
     Elastic.Notification notification = new Elastic.Notification(Elastic.NotificationLevel.INFO, "Info",
         "Test Battery Command has ended.");
 
-      if (RobotController.getBatteryVoltage() < 10) {
-      Elastic.sendNotification(notification.withDisplaySeconds(10.0));
-      }
-    Command testBattery = startHeating.andThen(timeout).repeatedly().until(() -> RobotController.getBatteryVoltage() < 10);
+    Command testBattery = startHeating.andThen(timeout).repeatedly()
+        .until(() -> RobotController.getBatteryVoltage() < 10)
+        .finallyDo(() -> Elastic.sendNotification(notification.withDisplaySeconds(10.0)));
 
     SmartDashboard.putData("Test Battery", testBattery);
 
