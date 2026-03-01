@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -34,6 +35,25 @@ public class HeaterSubsystem extends SubsystemBase {
   void makeMotor(int deviceId) {
     WPI_TalonSRX talon = new WPI_TalonSRX(deviceId);
     heaters.add(talon);
+
+    // https://v5.docs.ctr-electronics.com/en/latest/ch18_CommonAPI.html
+    int fast=10;
+    int slow=1000;
+    talon.setStatusFramePeriod(StatusFrame.Status_1_General, fast);
+    talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, fast);
+    talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, fast);
+
+    /*
+    talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, slow);
+    talon.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, slow);
+    */
+
   }
 
   void setHeaters(double value) {
