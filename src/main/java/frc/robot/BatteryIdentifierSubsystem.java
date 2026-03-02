@@ -27,9 +27,11 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
 
   /** Creates a new BatteryIdentifierSubsystem. */
   public BatteryIdentifierSubsystem() {
+    /*
     var visionThread = new Thread(this::apriltagVisionThreadProc);
     visionThread.setDaemon(true);
     visionThread.start();
+    */
 
     setBatteryId(-1);
   }
