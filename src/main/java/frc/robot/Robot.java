@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +11,10 @@ import org.usfirst.frc3620.logger.LoggingMaster;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
-
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -69,6 +71,8 @@ public class Robot extends TimedRobot {
     // enableLiveWindowInTest(true);
 
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    WebServer.start(5800, new File(Filesystem.getDeployDirectory(), "httproot").getPath());
   }
 
   /**
