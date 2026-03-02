@@ -37,20 +37,6 @@
           },
           {
             "title": "v",
-            "x": 128.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Robot/pdb/v",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "v",
             "x": 256.0,
             "y": 0.0,
             "width": 1152.0,
@@ -60,7 +46,7 @@
               "topic": "/Robot/v",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 5.0,
+              "time_displayed": 20.0,
               "color": 4278238420,
               "line_width": 2.0
             }
@@ -90,9 +76,23 @@
               "topic": "/Robot/pdb/j",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 5.0,
+              "time_displayed": 20.0,
               "color": 4278238420,
               "line_width": 2.0
+            }
+          },
+          {
+            "title": "v",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/v",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]
@@ -205,6 +205,34 @@
               "period": 0.06,
               "show_type": true,
               "maximize_button_space": false
+            }
+          },
+          {
+            "title": "RobotController.getBatteryVoltage",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/RobotController.getBatteryVoltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "batteryId",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/batteryId",
+              "period": 0.06,
+              "data_type": "int",
+              "show_submit_button": false
             }
           }
         ]

@@ -131,7 +131,7 @@ public class RobotContainer {
     Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
 
     Command testBattery = startHeating.andThen(timeout).repeatedly()
-        .until(() -> heaterSubsystem.getBatteryVoltage() < 10);
+        .until(() -> heaterSubsystem.getBatteryVoltage() < 10.6);
 
     BooleanConsumer notifyThatWeAreDone = interrupted -> {
       if (interrupted) {
