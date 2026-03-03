@@ -114,9 +114,9 @@ public class RobotContainer {
   }
 
   Elastic.Notification testIsCompleteNotification = new Elastic.Notification(Elastic.NotificationLevel.INFO, "Info",
-      "Test Battery Command is complete.").withDisplaySeconds(10.0);
+      "Test Battery Command is complete.").withNoAutoDismiss();
   Elastic.Notification testWasInterruptedNotification = new Elastic.Notification(Elastic.NotificationLevel.INFO, "Info",
-      "Test Battery Command was interrupted.").withDisplaySeconds(10.0);
+      "Test Battery Command was interrupted.").withNoAutoDismiss();
   Elastic.Notification noBatteryIdNotification = new Elastic.Notification(Elastic.NotificationLevel.ERROR, "Info",
       "Can't start test: need to know what battery we have!").withDisplaySeconds(10.0);
 
