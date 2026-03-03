@@ -42,13 +42,13 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
     IntegerTopic batteryIdTopic = NetworkTableInstance.getDefault().getIntegerTopic("batteryIdSetter");
     batteryIdEntry = batteryIdTopic.getEntry(-1);
     batteryIdEntry.set(-1);
+    setBatteryId(-1);
 
     NetworkTableInstance.getDefault().addListener(
         batteryIdEntry,
         EnumSet.of(NetworkTableEvent.Kind.kValueAll),
         event -> {
           int id = (int) event.valueData.value.getInteger();
-          DogLog.log("batteryId", id);
           logger.info("Battery id change from network tables: {}", id);
           setBatteryId(id);
         });

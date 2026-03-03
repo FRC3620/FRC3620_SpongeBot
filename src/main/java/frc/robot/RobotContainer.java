@@ -13,6 +13,8 @@ import org.usfirst.frc3620.odo.OdoIdsXBox;
 import org.usfirst.frc3620.odo.OdoJoystick;
 import org.usfirst.frc3620.odo.OdoJoystick.JoystickType;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import dev.doglog.DogLog;
 
 import org.usfirst.frc3620.CANDeviceFinder;
@@ -60,6 +62,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    // turn off CTRE hoot files
+    SignalLogger.enableAutoLogging(false);
+    
     canDeviceFinder = new CANDeviceFinder();
     for (var d : canDeviceFinder.getDeviceSet()) {
       logger.info("Have device {}", d);
