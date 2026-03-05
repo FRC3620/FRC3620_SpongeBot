@@ -196,3 +196,4 @@ log.txt
 /gradle.properties
 src/main/deploy/git.properties
 src/main/deploy/gversion.properties
+networktables.json.bck

@@ -26,6 +26,7 @@ import edu.wpi.first.networktables.IntegerEntry;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BatteryIdentifierSubsystem extends SubsystemBase {
@@ -36,6 +37,8 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
   IntegerEntry batteryIdEntry;
 
   Thread visionThread;
+
+  String okToStartVisionNTEntryName = "okToStartVision";
 
   /** Creates a new BatteryIdentifierSubsystem. */
   public BatteryIdentifierSubsystem() {
@@ -54,10 +57,22 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
         });
 
     setBatteryId(-1);
+
+    boolean okToStartVision = SmartDashboard.getBoolean(okToStartVisionNTEntryName, false);
+    if (okToStartVision) {
+      logger.info("{} NT entry is set, we are starting vision", okToStartVisionNTEntryName);
+      startVisionThread();
+    } else {
+      logger.info("{} NT entry is not set", okToStartVisionNTEntryName);
+    }
   }
 
   public void startVisionThread() {
     if (visionThread == null) {
+      // don't autorestart vision. we will allow autorestart once the vision thread can successfully start
+      SmartDashboard.putBoolean(okToStartVisionNTEntryName, false); 
+      SmartDashboard.setPersistent(okToStartVisionNTEntryName);
+      logger.info("turning off the {} NT entry, persist = {}", okToStartVisionNTEntryName, SmartDashboard.isPersistent(okToStartVisionNTEntryName));;
       visionThread = new Thread(this::apriltagVisionThreadProc);
       visionThread.setDaemon(true);
       visionThread.start();
@@ -80,6 +95,8 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
   }
 
   void apriltagVisionThreadProc() {
+    logger.info("starting vision thread");
+
     var detector = new AprilTagDetector();
     // look for tag36h11, correct 1 error bit (hamming distance 1)
     // hamming 1 allocates 781KB, 2 allocates 27.4 MB, 3 allocates 932 MB
@@ -105,6 +122,8 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
     ArrayList<Integer> validTags = new ArrayList<>();
     var outlineColor = new Scalar(0, 255, 0);
     var crossColor = new Scalar(0, 0, 255);
+
+    boolean markedSuccess = false;
 
     // This cannot be 'true'. The program will never exit if it is. This
     // lets the robot stop this thread when restarting robot code or
@@ -176,10 +195,19 @@ public class BatteryIdentifierSubsystem extends SubsystemBase {
 
       // Give the output stream a new image to display
       outputStream.putFrame(mat);
+
+      // if we got this far, then it's ok to start vision at next restart
+      if (! markedSuccess) {
+        SmartDashboard.putBoolean(okToStartVisionNTEntryName, true); 
+        logger.info("turning on the {} NT entry, persist = {}", okToStartVisionNTEntryName, SmartDashboard.isPersistent(okToStartVisionNTEntryName));;
+        markedSuccess = true;
+      }
     }
 
     detector.close();
+    camera.close(); 
 
+    logger.info("ending vision thread");
     visionThread = null;
   }
 
