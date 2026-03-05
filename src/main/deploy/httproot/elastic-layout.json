@@ -25,7 +25,7 @@
             "title": "v",
             "x": 256.0,
             "y": 0.0,
-            "width": 1152.0,
+            "width": 896.0,
             "height": 256.0,
             "type": "Graph",
             "properties": {
@@ -55,7 +55,7 @@
             "title": "j",
             "x": 256.0,
             "y": 256.0,
-            "width": 1152.0,
+            "width": 896.0,
             "height": 256.0,
             "type": "Graph",
             "properties": {
@@ -254,6 +254,19 @@
               "period": 0.06,
               "data_type": "int",
               "show_submit_button": true
+            }
+          },
+          {
+            "title": "okToStartVision",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Toggle Switch",
+            "properties": {
+              "topic": "/SmartDashboard/okToStartVision",
+              "period": 0.06,
+              "data_type": "boolean"
             }
           }
         ]
