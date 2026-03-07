@@ -138,6 +138,8 @@ public class RobotContainer {
     Command testBattery = startHeating.andThen(timeout).repeatedly()
         .until(() -> heaterSubsystem.getBatteryVoltage() < 10.6);
 
+    DogLog.log("cutoff criteria", "heaterSubsystem.getBatteryVoltage() < 10.6");
+
     BooleanConsumer notifyThatWeAreDone = interrupted -> {
       if (interrupted) {
         Elastic.sendNotification(testWasInterruptedNotification);

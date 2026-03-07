@@ -103,6 +103,10 @@ public class HeaterSubsystem extends SubsystemBase {
       tracer.addEpoch("PDP currents");
     }
 
+    double total_i = 0;
+    double total_v = 0;
+    int n_v = 0;
+
     for (var heater : heaters) {
       int deviceId = heater.getDeviceID();
       String name = "H" + deviceId;
@@ -127,6 +131,10 @@ public class HeaterSubsystem extends SubsystemBase {
       DogLog.log(name + "/input/hb", hb);
       if (tracer != null) tracer.addEpoch(name + " log input");
 
+      total_i += inputCurrent;
+      total_v += inputVoltage;
+      n_v++;
+
       double setpoint = heater.getMotorOutputPercent();
       DogLog.log(name + "/setpoint", setpoint);
       if (tracer != null) tracer.addEpoch(name + " gather and log setpoint");
@@ -137,6 +145,11 @@ public class HeaterSubsystem extends SubsystemBase {
         if (tracer != null) tracer.addEpoch(name + " log pdb current");
       }
     }
+    
+    var average_v = total_v / n_v;
+    DogLog.log("H/v", average_v);
+    DogLog.log("H/a", total_i);
+    DogLog.log("H/w", total_i*average_v);
 
     if (powerDistribution != null) {
       DogLog.log("pdb/v", powerDistribution.getVoltage());
