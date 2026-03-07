@@ -132,8 +132,8 @@ public class RobotContainer {
     // Motors").withTimeout(12));
     heaterSubsystem.setDefaultCommand(heaterSubsystem.makeSetSpeedCommand(0).withName("Stopped Motors"));
 
-    Command startHeating = heaterSubsystem.makeSetSpeedCommand(0.75).withTimeout(12);
-    Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(3);
+    Command startHeating = heaterSubsystem.makeSetSpeedCommand(0.90).withTimeout(48);
+    Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(12);
 
     Command testBattery = startHeating.andThen(timeout).repeatedly()
         .until(() -> heaterSubsystem.getBatteryVoltage() < 10.6);

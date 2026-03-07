@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
+import org.jspecify.annotations.NullMarked;
+import org.tinylog.TaggedLogger;
+import org.usfirst.frc3620.logger.LoggingMaster;
+
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -15,6 +19,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,7 +30,11 @@ public class HeaterSubsystem extends SubsystemBase {
   PowerDistribution powerDistribution;
   int hb = 0;
 
+  TaggedLogger logger = LoggingMaster.getLogger(getClass());
+
   double heaterPower = 0;
+
+  Tracer tracer = null;
 
   public HeaterSubsystem() {
     powerDistribution = RobotContainer.powerDistribution;
@@ -59,10 +69,12 @@ public class HeaterSubsystem extends SubsystemBase {
   }
 
   void setHeaters(double value) {
-    for (var heater : heaters) {
-      heater.set(TalonSRXControlMode.PercentOutput, value);
+    if (value != heaterPower) {
+      for (var heater : heaters) {
+        heater.set(TalonSRXControlMode.PercentOutput, value);
+      }
+      heaterPower = value;
     }
-    heaterPower = value;
   }
 
   public Command makeSetSpeedCommand(DoubleSupplier supplier) {
@@ -80,9 +92,15 @@ public class HeaterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     hb = hb + 1;
+
+    double t0 = Timer.getFPGATimestamp();
+
+    if (tracer != null) tracer.resetTimer();
+
     double[] currents = null;
     if (powerDistribution != null) {
       currents = powerDistribution.getAllCurrents();
+      tracer.addEpoch("PDP currents");
     }
 
     for (var heater : heaters) {
@@ -91,26 +109,32 @@ public class HeaterSubsystem extends SubsystemBase {
 
       double outputCurrent = heater.getStatorCurrent();
       double outputVoltage = heater.getMotorOutputVoltage();
+      if (tracer != null) tracer.addEpoch(name + " gather output");
 
       DogLog.log(name + "/output/v", outputVoltage);
       DogLog.log(name + "/output/a", outputCurrent);
       DogLog.log(name + "/output/w", outputCurrent*outputVoltage);
       DogLog.log(name + "/output/hb", hb);
+      if (tracer != null) tracer.addEpoch(name + " log output");
       
       double inputCurrent = heater.getSupplyCurrent();
       double inputVoltage = heater.getBusVoltage();
+      if (tracer != null) tracer.addEpoch(name + " gather input");
 
       DogLog.log(name + "/input/v", inputVoltage);
       DogLog.log(name + "/input/a", inputCurrent);
       DogLog.log(name + "/input/w", inputCurrent*inputVoltage);
       DogLog.log(name + "/input/hb", hb);
+      if (tracer != null) tracer.addEpoch(name + " log input");
 
       double setpoint = heater.getMotorOutputPercent();
       DogLog.log(name + "/setpoint", setpoint);
+      if (tracer != null) tracer.addEpoch(name + " gather and log setpoint");
 
       // heater 1 is wired to PDP port 0, heater 2 to PDP port 1, etc.
       if (currents != null) {
         DogLog.log(name + "/pdb/a", currents[deviceId-1]);
+        if (tracer != null) tracer.addEpoch(name + " log pdb current");
       }
     }
 
@@ -120,9 +144,20 @@ public class HeaterSubsystem extends SubsystemBase {
       DogLog.log("pdb/w", powerDistribution.getTotalPower()); // this seems to match our calc of getVoltage*getTotalCurrent
       DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
       DogLog.log("pdb/hb", hb);
+      if (tracer != null) tracer.addEpoch("PDP gather and log");
     }
     DogLog.log("v", getBatteryVoltage());
     DogLog.log("hb", hb);
+
+    if (tracer != null) {
+      double t = Timer.getFPGATimestamp() - t0;
+      DogLog.log("heater.periodic() time", t);
+      if (t > 0.020) {
+        logger.warn("heater.periodic() time = {}", t);
+        tracer.printEpochs((s) -> logger.info("heater trace: {}", s));
+      }
+    }
+
 
     Command c = this.getCurrentCommand();
     DogLog.log("cmd", c == null ? "" : c.getName());
