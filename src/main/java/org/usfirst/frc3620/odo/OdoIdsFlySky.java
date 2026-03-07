@@ -7,7 +7,13 @@ public class OdoIdsFlySky {
   // was a reasonable alternative to doing the enum. 
   // it's not as concise, so I went the other way. 67.
 
+  /**
+   * Definition of all the FlySky axes
+   */
   public static enum AxisId implements IOdoAxisId {
+    /**
+     * The left stick X axis. Positive is to the right.
+     */
     LEFT_X(0),
     LEFT_Y(1),
     RIGHT_Y(2), // Z Axis in driver station
@@ -52,5 +58,9 @@ public class OdoIdsFlySky {
     public int getButtonNumber() {
       return buttonNumber;
     }
+  }
+
+  void test() {
+    IOdoAxisId x = OdoIdsFlySky.AxisId.LEFT_X;
   }
 }
