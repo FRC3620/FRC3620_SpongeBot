@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
-import org.jspecify.annotations.NullMarked;
 import org.tinylog.TaggedLogger;
 import org.usfirst.frc3620.logger.LoggingMaster;
 
@@ -18,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,13 +24,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HeaterSubsystem extends SubsystemBase {
   /** Creates a new HeaterSubsystem. */
-  List<WPI_TalonSRX> heaters = new ArrayList<>();
+  public List<WPI_TalonSRX> heaters = new ArrayList<>();
   PowerDistribution powerDistribution;
   int hb = 0;
 
   TaggedLogger logger = LoggingMaster.getLogger(getClass());
 
-  double heaterPower = 0;
+  double heaterPower = 0.00000001;
 
   Tracer tracer = null;
 
@@ -42,6 +40,8 @@ public class HeaterSubsystem extends SubsystemBase {
     makeMotor(2);
     makeMotor(3);
     makeMotor(4);
+
+    setHeaterPower(0);
   }
 
   void makeMotor(int deviceId) {
@@ -68,31 +68,25 @@ public class HeaterSubsystem extends SubsystemBase {
 
   }
 
-  void setHeaters(double value) {
+  void setHeaterPower(double value) {
     if (value != heaterPower) {
       for (var heater : heaters) {
         heater.set(TalonSRXControlMode.PercentOutput, value);
       }
       heaterPower = value;
+      DogLog.log("H/setpoint", value);
     }
   }
 
   public Command makeSetSpeedCommand(DoubleSupplier supplier) {
-    return run(() -> setHeaters(supplier.getAsDouble()));
+    return run(() -> setHeaterPower(supplier.getAsDouble()));
   }
 
   public Command makeSetSpeedCommand(double value) {
-    return run(() -> setHeaters(value));
+    return run(() -> setHeaterPower(value));
   }
 
-  public double getHeaterPower() {
-    return heaterPower;
-  }
-
-  @Override
-  public void periodic() {
-    hb = hb + 1;
-
+  public void record(int hb) {
     double t0 = Timer.getFPGATimestamp();
 
     if (tracer != null) tracer.resetTimer();
@@ -100,7 +94,7 @@ public class HeaterSubsystem extends SubsystemBase {
     double[] currents = null;
     if (powerDistribution != null) {
       currents = powerDistribution.getAllCurrents();
-      tracer.addEpoch("PDP currents");
+      if (tracer != null) tracer.addEpoch("PDP currents");
     }
 
     double total_i = 0;
@@ -151,16 +145,7 @@ public class HeaterSubsystem extends SubsystemBase {
     DogLog.log("H/a", total_i);
     DogLog.log("H/w", total_i*average_v);
 
-    if (powerDistribution != null) {
-      DogLog.log("pdb/v", powerDistribution.getVoltage());
-      DogLog.log("pdb/a", powerDistribution.getTotalCurrent());
-      DogLog.log("pdb/w", powerDistribution.getTotalPower()); // this seems to match our calc of getVoltage*getTotalCurrent
-      DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
-      DogLog.log("pdb/hb", hb);
-      if (tracer != null) tracer.addEpoch("PDP gather and log");
-    }
-    DogLog.log("v", getBatteryVoltage());
-    DogLog.log("hb", hb);
+
 
     if (tracer != null) {
       double t = Timer.getFPGATimestamp() - t0;
@@ -171,12 +156,7 @@ public class HeaterSubsystem extends SubsystemBase {
       }
     }
 
-
     Command c = this.getCurrentCommand();
     DogLog.log("cmd", c == null ? "" : c.getName());
-  }
-
-  public double getBatteryVoltage() {
-    return RobotController.getBatteryVoltage();
   }
 }

@@ -29,6 +29,8 @@ import org.tinylog.TaggedLogger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Elastic;
 
 /**
@@ -55,6 +57,7 @@ public class RobotContainer {
   HeaterSubsystem heaterSubsystem;
   BatteryIdentifierSubsystem batteryIdentifierSubsystem;
   SimulatedBatterySubsystem simulatedBatterySubsystem;
+  DataRecorderSubsystem dataRecorderSubsystem;
 
   // joysticks here....
 
@@ -64,7 +67,7 @@ public class RobotContainer {
   public RobotContainer() {
     // turn off CTRE hoot files
     SignalLogger.enableAutoLogging(false);
-    
+
     canDeviceFinder = new CANDeviceFinder();
     for (var d : canDeviceFinder.getDeviceSet()) {
       logger.info("Have device {}", d);
@@ -102,8 +105,10 @@ public class RobotContainer {
   private void makeSubsystems() {
     heaterSubsystem = new HeaterSubsystem();
     batteryIdentifierSubsystem = new BatteryIdentifierSubsystem();
+    dataRecorderSubsystem = new DataRecorderSubsystem();
     if (Robot.isSimulation()) {
-      simulatedBatterySubsystem = new SimulatedBatterySubsystem(powerDistribution, heaterSubsystem::getHeaterPower);
+      simulatedBatterySubsystem = new SimulatedBatterySubsystem(powerDistribution);
+      simulatedBatterySubsystem.addHeaters(heaterSubsystem.heaters);
     }
   }
 
@@ -136,9 +141,9 @@ public class RobotContainer {
     Command timeout = heaterSubsystem.makeSetSpeedCommand(0.0).withTimeout(12);
 
     Command testBattery = startHeating.andThen(timeout).repeatedly()
-        .until(() -> heaterSubsystem.getBatteryVoltage() < 10.6);
+        .until(() -> batteryVoltage < 10.6);
 
-    DogLog.log("cutoff criteria", "heaterSubsystem.getBatteryVoltage() < 10.6");
+    DogLog.log("cutoff criteria", "batteryVoltage < 10.6");
 
     BooleanConsumer notifyThatWeAreDone = interrupted -> {
       if (interrupted) {
@@ -158,7 +163,8 @@ public class RobotContainer {
 
     SmartDashboard.putData(testOrNotifyAboutBatteryId);
 
-    SmartDashboard.putData(Commands.runOnce(() -> batteryIdentifierSubsystem.startVisionThread()).withName("Start Vision").ignoringDisable(true));
+    SmartDashboard.putData(Commands.runOnce(() -> batteryIdentifierSubsystem.startVisionThread())
+        .withName("Start Vision").ignoringDisable(true));
   }
 
   SendableChooser<Command> chooser = new SendableChooser<>();
@@ -242,4 +248,27 @@ public class RobotContainer {
     return false;
   }
 
+  double batteryVoltage;
+
+  class DataRecorderSubsystem extends SubsystemBase {
+    int hb = 0;
+
+    @Override
+    public void periodic() {
+      hb = hb + 1;
+      heaterSubsystem.record(hb);
+
+      if (powerDistribution != null) {
+        batteryVoltage = powerDistribution.getVoltage();
+        DogLog.log("pdb/v", batteryVoltage);
+        DogLog.log("pdb/a", powerDistribution.getTotalCurrent());
+        DogLog.log("pdb/w", powerDistribution.getTotalPower());
+        DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
+        DogLog.log("pdb/hb", hb);
+      }
+
+      DogLog.log("v", batteryVoltage);
+      DogLog.log("hb", hb);
+    }
+  }
 }
