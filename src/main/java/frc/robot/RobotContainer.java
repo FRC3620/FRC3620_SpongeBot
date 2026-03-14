@@ -6,12 +6,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc3620.logger.LogCommand;
 import org.usfirst.frc3620.logger.LoggingMaster;
-import org.usfirst.frc3620.odo.OdoIdsFlySky;
-import org.usfirst.frc3620.odo.OdoIdsXBox;
-import org.usfirst.frc3620.odo.OdoJoystick;
-import org.usfirst.frc3620.odo.OdoJoystick.JoystickType;
 
 import com.ctre.phoenix6.SignalLogger;
 
@@ -19,8 +14,6 @@ import dev.doglog.DogLog;
 
 import org.usfirst.frc3620.CANDeviceFinder;
 import org.usfirst.frc3620.CANDeviceType;
-import org.usfirst.frc3620.RobotMode;
-import org.usfirst.frc3620.RobotModeChangeListener;
 import org.usfirst.frc3620.RobotParametersContainer;
 import org.usfirst.frc3620.Utilities;
 
@@ -28,8 +21,6 @@ import org.tinylog.TaggedLogger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Elastic;
 
@@ -142,8 +133,7 @@ public class RobotContainer {
 
     Command testBattery = startHeating.andThen(timeout).repeatedly()
         .until(() -> batteryVoltage < 10.6);
-
-    DogLog.log("cutoff criteria", "batteryVoltage < 10.6");
+    Command logCutoffCriteria = Commands.runOnce(() -> DogLog.log("cutoff criteria", "batteryVoltage < 10.6"));
 
     BooleanConsumer notifyThatWeAreDone = interrupted -> {
       if (interrupted) {
@@ -153,15 +143,21 @@ public class RobotContainer {
       }
     };
 
-    Command testAndNotify = testBattery.finallyDo(notifyThatWeAreDone);
+    Command testAndNotify = logCutoffCriteria.andThen(testBattery).finallyDo(notifyThatWeAreDone);
 
-    Command notifyAboutBatteryId = Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification));
-
-    Command testOrNotifyAboutBatteryId = Commands
-        .either(testAndNotify, notifyAboutBatteryId, () -> batteryIdentifierSubsystem.getBatteryId().isPresent())
-        .withName("Test Battery");
-
+    Command testOrNotifyAboutBatteryId = Commands.either( //
+      testAndNotify, //
+      Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
+      () -> batteryIdentifierSubsystem.getBatteryId().isPresent()
+    ).withName("Test Battery");
     SmartDashboard.putData(testOrNotifyAboutBatteryId);
+
+    Command fancyTestAndNotify = new FancyTestCommand(heaterSubsystem).finallyDo(notifyThatWeAreDone);
+    SmartDashboard.putData(Commands.either(  //
+      fancyTestAndNotify, //
+      Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
+      () -> batteryIdentifierSubsystem.getBatteryId().isPresent() //
+    ).withName("Fancy Test Battery"));
 
     SmartDashboard.putData(Commands.runOnce(() -> batteryIdentifierSubsystem.startVisionThread())
         .withName("Start Vision").ignoringDisable(true));
@@ -203,7 +199,6 @@ public class RobotContainer {
    *
    * @return true if this robot is a competition robot.
    */
-  @SuppressWarnings({ "unused", "RedundantIfStatement", "PointlessBooleanExpression" })
   public static boolean amIACompBot() {
     if (DriverStation.isFMSAttached()) {
       return true;
@@ -235,7 +230,6 @@ public class RobotContainer {
    *
    * @return true if we should make all software objects for CAN devices
    */
-  @SuppressWarnings({ "unused", "RedundantIfStatement" })
   public static boolean shouldMakeAllCANDevices() {
     if (amIACompBot()) {
       return true;
@@ -248,7 +242,7 @@ public class RobotContainer {
     return false;
   }
 
-  double batteryVoltage;
+  static double batteryVoltage;
 
   class DataRecorderSubsystem extends SubsystemBase {
     int hb = 0;
@@ -265,10 +259,20 @@ public class RobotContainer {
         DogLog.log("pdb/w", powerDistribution.getTotalPower());
         DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
         DogLog.log("pdb/hb", hb);
+      } else {
+        batteryVoltage = RobotController.getBatteryVoltage();
+        if (simulatedBatterySubsystem != null) {
+          DogLog.log("pdb/j", simulatedBatterySubsystem.getTotalEnergy());
+          DogLog.log("pdb/hb", hb);
+        }
       }
 
       DogLog.log("v", batteryVoltage);
       DogLog.log("hb", hb);
     }
+  }
+
+  public static double getBatteryVoltage() {
+    return batteryVoltage;
   }
 }

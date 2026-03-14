@@ -50,12 +50,12 @@ public class HeaterSubsystem extends SubsystemBase {
 
     // https://v5.docs.ctr-electronics.com/en/latest/ch18_CommonAPI.html
     int fast=10;
-    int slow=1000;
     talon.setStatusFramePeriod(StatusFrame.Status_1_General, fast);
     talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, fast);
     talon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, fast);
 
     /*
+    int slow=1000;
     talon.setStatusFramePeriod(StatusFrame.Status_6_Misc, slow);
     talon.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, slow);
     talon.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, slow);

@@ -3,7 +3,6 @@ import org.junit.Test;
 import edu.wpi.first.units.EnergyUnit;
 import edu.wpi.first.units.TimeUnit;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Energy;
 
 import static edu.wpi.first.units.Units.*;
 

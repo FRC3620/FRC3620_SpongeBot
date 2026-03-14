@@ -9,13 +9,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.PDPSim;
@@ -39,12 +40,19 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
   Map<TalonSRX, TalonSRXSimCollection> heaterSims = new HashMap<>();
   Map<TalonSRX, Double> heaterResistance = new HashMap<>();
 
+  DoubleEntry socEntry;
+
   /** Creates a new SimulatedBattery. */
   public SimulatedBatterySubsystem(PowerDistribution powerDistribution) {
     if (powerDistribution != null) {
       pdpSim = new PDPSim(powerDistribution);
     }
+    DoubleTopic socTopic = NetworkTableInstance.getDefault().getDoubleTopic("sim/soc_setter");
+    socEntry = socTopic.getEntry(1.0);
+    socEntry.set(1.0);
+
     SmartDashboard.putData(Commands.runOnce(() -> { batteryJoules = batteryFullJoules; }).ignoringDisable(true).withName("Reset Simulated Battery"));
+    SmartDashboard.putData(Commands.runOnce(() -> { setSOC(socEntry.get(1.0)); }).ignoringDisable(true).withName("Set Simulated SOC"));
   }
 
   public void addHeaters(Collection<? extends TalonSRX> heaters) {
@@ -56,31 +64,31 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var v_noload = calculateVoltageForStateOfCharge(batteryJoules / batteryFullJoules);
+    double v_noload = calculateVoltageForStateOfCharge(batteryJoules / batteryFullJoules);
     DogLog.log("sim/v_noload", v_noload);
 
     heaterResistance.clear();
     for (var heater : heaters) {
-      var power = heater.getMotorOutputPercent();
+      double power = heater.getMotorOutputPercent();
       if (power != 0) {
         assert power != 0;
       }
-      var heater_r = (power != 0) ? (1.0 / power * heaterOhms) : Double.POSITIVE_INFINITY;
+      double heater_r = (power != 0) ? (1.0 / power * heaterOhms) : Double.POSITIVE_INFINITY;
       DogLog.log("sim/H" + heater.getDeviceID() + "/r", heater_r);
       heaterResistance.put(heater, heater_r);
     }
 
-    var sum_of_1_over_r = 0.0;
-    for (var r : heaterResistance.values()) {
+    double sum_of_1_over_r = 0.0;
+    for (Double r : heaterResistance.values()) {
       if (Double.isFinite(r)) {
         sum_of_1_over_r += (1.0 / r);
       }
     }
-    var effective_r = (sum_of_1_over_r == 0) ? Double.POSITIVE_INFINITY : (1.0 / sum_of_1_over_r);
+    double effective_r = (sum_of_1_over_r == 0) ? Double.POSITIVE_INFINITY : (1.0 / sum_of_1_over_r);
     DogLog.log("sim/heater_r", effective_r);
 
-    var v_battery = v_noload;
-    var i = 0.0;
+    double v_battery = v_noload;
+    double i = 0.0;
     if (Double.isFinite(effective_r)) {
       v_battery = v_noload * (effective_r / (effective_r + rInt));
       i = v_battery / effective_r;
@@ -90,9 +98,11 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
 
     for (var h : heaters) {
       var heaterSim = heaterSims.get(h);
-      var r = heaterResistance.get(h);
-      var i_h = 0.0;
-      if (Double.isFinite(r)) i_h = v_battery / r;
+      double r = heaterResistance.get(h);
+      double i_h = 0.0;
+      if (Double.isFinite(r)) {
+        i_h = v_battery / r;
+      }
       heaterSim.setSupplyCurrent(i_h);
       if (pdpSim != null) {
         pdpSim.setCurrent(h.getDeviceID(), i_h);
@@ -117,7 +127,17 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
     DogLog.log("sim/j_inc_t", t);
 
     batteryJoules = batteryJoules - j;
-    DogLog.log("sim/j", batteryJoules);
+    DogLog.log("sim/j", getTotalEnergy());
+    DogLog.log("sim/j_remaining", batteryJoules);
+    DogLog.log("sim/soc", batteryJoules / batteryFullJoules);
+  }
+
+  public void setSOC(double soc) {
+    batteryJoules = soc * batteryFullJoules;
+  }
+
+  public double getTotalEnergy() {
+    return batteryFullJoules - batteryJoules;
   }
 
   public static double calculateVoltageForStateOfCharge(double soc) {
