@@ -88,10 +88,13 @@ public class FancyTestCommand extends Command {
 
     @Override
     public FancyState execute() {
-      heaterSubsystem.setHeaterPower(0.9);
+      if (RobotContainer.getBatteryVoltage() < 8.00) {
+        return doneState;
+      }
       if (timer.hasElapsed(48)) {
         return restState;
       }
+      heaterSubsystem.setHeaterPower(0.9);
       return null;
     }
   };

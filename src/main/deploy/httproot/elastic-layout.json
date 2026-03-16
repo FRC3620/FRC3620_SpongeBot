@@ -46,7 +46,7 @@
               "topic": "/Robot/v",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 20.0,
+              "time_displayed": 65.0,
               "color": 4278238420,
               "line_width": 2.0
             }
@@ -76,7 +76,7 @@
               "topic": "/Robot/pdb/j",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 20.0,
+              "time_displayed": 65.0,
               "color": 4278238420,
               "line_width": 2.0
             }
@@ -127,7 +127,7 @@
             "title": "cutoff criteria",
             "x": 0.0,
             "y": 512.0,
-            "width": 384.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -139,8 +139,8 @@
           },
           {
             "title": "FancyTest",
-            "x": 384.0,
-            "y": 512.0,
+            "x": 0.0,
+            "y": 640.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -149,6 +149,22 @@
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "a",
+            "x": 256.0,
+            "y": 512.0,
+            "width": 1152.0,
+            "height": 256.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/Robot/H/a",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 65.0,
+              "color": 4278238420,
+              "line_width": 2.0
             }
           }
         ]
@@ -264,23 +280,9 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Reset Simulated Battery",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Reset Simulated Battery",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
             "title": "RobotController.getBatteryVoltage",
             "x": 0.0,
-            "y": 128.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -294,7 +296,7 @@
           {
             "title": "batteryId",
             "x": 0.0,
-            "y": 256.0,
+            "y": 0.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -307,7 +309,7 @@
           },
           {
             "title": "heater_r",
-            "x": 256.0,
+            "x": 512.0,
             "y": 128.0,
             "width": 256.0,
             "height": 128.0,
@@ -335,7 +337,7 @@
           },
           {
             "title": "j",
-            "x": 768.0,
+            "x": 1024.0,
             "y": 128.0,
             "width": 256.0,
             "height": 128.0,
@@ -349,7 +351,7 @@
           },
           {
             "title": "v_loaded",
-            "x": 512.0,
+            "x": 768.0,
             "y": 256.0,
             "width": 256.0,
             "height": 128.0,
@@ -363,7 +365,7 @@
           },
           {
             "title": "v_noload",
-            "x": 512.0,
+            "x": 768.0,
             "y": 128.0,
             "width": 256.0,
             "height": 128.0,
@@ -377,8 +379,8 @@
           },
           {
             "title": "w",
-            "x": 256.0,
-            "y": 384.0,
+            "x": 512.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -405,7 +407,7 @@
           },
           {
             "title": "j_remaining",
-            "x": 768.0,
+            "x": 1024.0,
             "y": 256.0,
             "width": 256.0,
             "height": 128.0,
