@@ -251,10 +251,10 @@ public class RobotContainer {
       hb = hb + 1;
       heaterSubsystem.record(hb);
 
-      if (Robot.isReal() && powerDistribution != null) {
+      if (Robot.isReal() && powerDistribution == null) {
           batteryVoltage = RobotController.getBatteryVoltage();
       } else {
-        // simulation, or else real with no CTRE PDB
+        // simulation, or else real with CTRE PDB
         batteryVoltage = powerDistribution.getVoltage();
         DogLog.log("pdb/a", powerDistribution.getTotalCurrent());
         DogLog.log("pdb/w", powerDistribution.getTotalPower());
