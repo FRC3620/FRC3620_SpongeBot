@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -62,9 +63,12 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
     }
   }
 
+  Random random = new Random();
+
   @Override
   public void periodic() {
-    double v_noload = calculateVoltageForStateOfCharge(batteryJoules / batteryFullJoules);
+    double randomosity = (random.nextDouble() - 0.5) / 10.0;
+    double v_noload = calculateVoltageForStateOfCharge(batteryJoules / batteryFullJoules) + randomosity;
     DogLog.log("sim/v_noload", v_noload);
 
     heaterResistance.clear();
@@ -93,6 +97,7 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
       v_battery = v_noload * (effective_r / (effective_r + rInt));
       i = v_battery / effective_r;
     }
+    v_battery = roundToNearest005(v_battery);
     DogLog.log("sim/v_loaded", v_battery);
     DogLog.log("sim/i", i);
 
@@ -142,5 +147,9 @@ public class SimulatedBatterySubsystem extends SubsystemBase {
 
   public static double calculateVoltageForStateOfCharge(double soc) {
     return 11.75 + (1.25 * soc);
+  }
+
+  public static double roundToNearest005(double number) {
+    return Math.round(number * 20.0) / 20.0;
   }
 }

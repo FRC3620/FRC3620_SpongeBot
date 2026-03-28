@@ -146,17 +146,16 @@ public class RobotContainer {
     Command testAndNotify = logCutoffCriteria.andThen(testBattery).finallyDo(notifyThatWeAreDone);
 
     Command testOrNotifyAboutBatteryId = Commands.either( //
-      testAndNotify, //
-      Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
-      () -> batteryIdentifierSubsystem.getBatteryId().isPresent()
-    ).withName("Test Battery");
+        testAndNotify, //
+        Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
+        () -> batteryIdentifierSubsystem.getBatteryId().isPresent()).withName("Test Battery");
     SmartDashboard.putData(testOrNotifyAboutBatteryId);
 
     Command fancyTestAndNotify = new FancyTestCommand(heaterSubsystem).finallyDo(notifyThatWeAreDone);
-    SmartDashboard.putData(Commands.either(  //
-      fancyTestAndNotify, //
-      Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
-      () -> batteryIdentifierSubsystem.getBatteryId().isPresent() //
+    SmartDashboard.putData(Commands.either( //
+        fancyTestAndNotify, //
+        Commands.runOnce(() -> Elastic.sendNotification(noBatteryIdNotification)), //
+        () -> batteryIdentifierSubsystem.getBatteryId().isPresent() //
     ).withName("Fancy Test Battery"));
 
     SmartDashboard.putData(Commands.runOnce(() -> batteryIdentifierSubsystem.startVisionThread())
@@ -252,20 +251,21 @@ public class RobotContainer {
       hb = hb + 1;
       heaterSubsystem.record(hb);
 
-      if (powerDistribution != null) {
+      if (Robot.isReal() && powerDistribution != null) {
+          batteryVoltage = RobotController.getBatteryVoltage();
+      } else {
+        // simulation, or else real with no CTRE PDB
         batteryVoltage = powerDistribution.getVoltage();
-        DogLog.log("pdb/v", batteryVoltage);
         DogLog.log("pdb/a", powerDistribution.getTotalCurrent());
         DogLog.log("pdb/w", powerDistribution.getTotalPower());
-        DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
-        DogLog.log("pdb/hb", hb);
-      } else {
-        batteryVoltage = RobotController.getBatteryVoltage();
-        if (simulatedBatterySubsystem != null) {
+        if (Robot.isReal()) {
+          DogLog.log("pdb/j", powerDistribution.getTotalEnergy());
+        } else {
           DogLog.log("pdb/j", simulatedBatterySubsystem.getTotalEnergy());
-          DogLog.log("pdb/hb", hb);
         }
       }
+      DogLog.log("pdb/v", batteryVoltage);
+      DogLog.log("pdb/hb", hb);
 
       DogLog.log("v", batteryVoltage);
       DogLog.log("hb", hb);

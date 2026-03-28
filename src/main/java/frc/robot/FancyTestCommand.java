@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.usfirst.frc3620.Utilities.SlidingWindowStats;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +23,7 @@ public class FancyTestCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    DogLog.log("cutoff criteria", "idle batteryVoltage < " + UNLOAD_VOLTAGE_AT_50_PERCENT_SOC);
+    DogLog.log("cutoff criteria", "mean of last 10 idle batteryVoltage < " + UNLOAD_VOLTAGE_AT_50_PERCENT_SOC);
     fsm.setState(restState);
   }
 
@@ -59,17 +61,23 @@ public class FancyTestCommand extends Command {
 
   FancyState restState = new FancyState("reststate") {
     Timer timer = new Timer();
+    SlidingWindowStats stats = new SlidingWindowStats(10);
 
     public void onEnter() {
       timer.reset();
       timer.start();
       heaterSubsystem.setHeaterPower(0);
+
+      stats.clear();
     }
 
     @Override
     public FancyState execute() {
+      stats.addValue(RobotContainer.getBatteryVoltage());
+      double v = stats.getMean();
+      DogLog.log("v_rest_mean_of_10", v);
       if (timer.hasElapsed(12)) {
-        if (RobotContainer.getBatteryVoltage() > UNLOAD_VOLTAGE_AT_50_PERCENT_SOC) {
+        if (v > UNLOAD_VOLTAGE_AT_50_PERCENT_SOC) {
           return activeState;
         } else {
           return doneState;
