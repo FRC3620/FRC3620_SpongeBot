@@ -12,7 +12,11 @@ public class FancyTestCommand extends Command {
   HeaterSubsystem heaterSubsystem;
   StateMachine<FancyState> fsm;
 
-  final static double UNLOAD_VOLTAGE_AT_50_PERCENT_SOC = (11.75 + 13.00) / 2.0; // 11.75 is 0% SOC, 13 is 100%
+  final static double UNLOADED_CUTOFF_VOLTAGE = v_for_soc(0.4);
+
+  static double v_for_soc(double soc) {
+    return 11.75 + (soc * 1.25);
+  }
 
   public FancyTestCommand(HeaterSubsystem heaterSubsystem) {
     this.heaterSubsystem = heaterSubsystem;
@@ -23,7 +27,7 @@ public class FancyTestCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    DogLog.log("cutoff criteria", "mean of last 10 idle batteryVoltage < " + UNLOAD_VOLTAGE_AT_50_PERCENT_SOC);
+    DogLog.log("cutoff criteria", "mean of last 10 idle batteryVoltage < " + UNLOADED_CUTOFF_VOLTAGE);
     fsm.setState(restState);
   }
 
@@ -77,7 +81,7 @@ public class FancyTestCommand extends Command {
       double v = stats.getMean();
       DogLog.log("v_rest_mean_of_10", v);
       if (timer.hasElapsed(12)) {
-        if (v > UNLOAD_VOLTAGE_AT_50_PERCENT_SOC) {
+        if (v > UNLOADED_CUTOFF_VOLTAGE) {
           return activeState;
         } else {
           return doneState;
