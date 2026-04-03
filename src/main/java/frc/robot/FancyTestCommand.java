@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.usfirst.frc3620.Utilities.SlidingWindowStats;
 
 import dev.doglog.DogLog;
@@ -12,7 +16,9 @@ public class FancyTestCommand extends Command {
   HeaterSubsystem heaterSubsystem;
   StateMachine<FancyState> fsm;
 
-  final static double UNLOADED_CUTOFF_VOLTAGE = v_for_soc(0.4);
+  final static double UNLOADED_CUTOFF_VOLTAGE = v_for_soc(0.45);
+
+  ZonedDateTime timeOfTestStart = null;
 
   static double v_for_soc(double soc) {
     return 11.75 + (soc * 1.25);
@@ -95,6 +101,13 @@ public class FancyTestCommand extends Command {
     Timer timer = new Timer();
 
     public void onEnter() {
+      if (timeOfTestStart == null) {
+        ZoneId zoneId = ZoneId.of("America/Detroit");
+        timeOfTestStart = ZonedDateTime.now(zoneId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+        String timeOfTestStart_text = timeOfTestStart.format(formatter);
+        DogLog.log("test_start_time", timeOfTestStart_text);
+      }
       timer.reset();
       timer.start();
     }

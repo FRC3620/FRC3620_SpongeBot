@@ -14,6 +14,7 @@ import dev.doglog.DogLog;
 
 import org.usfirst.frc3620.CANDeviceFinder;
 import org.usfirst.frc3620.CANDeviceType;
+import org.usfirst.frc3620.FakeDS;
 import org.usfirst.frc3620.RobotParametersContainer;
 import org.usfirst.frc3620.Utilities;
 
@@ -160,7 +161,14 @@ public class RobotContainer {
 
     SmartDashboard.putData(Commands.runOnce(() -> batteryIdentifierSubsystem.startVisionThread())
         .withName("Start Vision").ignoringDisable(true));
+
+    SmartDashboard.putData(Commands.runEnd(
+      () -> { ds.start(); }, //
+      () -> { ds.stop(); }
+    ).withName("DS").ignoringDisable(true));
   }
+
+  FakeDS ds = new FakeDS();
 
   SendableChooser<Command> chooser = new SendableChooser<>();
 

@@ -1,6 +1,6 @@
 {
   "version": 1.0,
-  "grid_size": 128,
+  "grid_size": 64,
   "tabs": [
     {
       "name": "Test Battery",
@@ -19,20 +19,6 @@
               "period": 0.06,
               "data_type": "int",
               "show_submit_button": false
-            }
-          },
-          {
-            "title": "Test Battery",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Test Battery",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
             }
           },
           {
@@ -112,7 +98,7 @@
           {
             "title": "Fancy Test Battery",
             "x": 0.0,
-            "y": 128.0,
+            "y": 0.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -124,23 +110,9 @@
             }
           },
           {
-            "title": "cutoff criteria",
-            "x": 0.0,
-            "y": 512.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/Robot/cutoff criteria",
-              "period": 0.06,
-              "data_type": "string",
-              "show_submit_button": false
-            }
-          },
-          {
             "title": "FancyTest",
             "x": 0.0,
-            "y": 640.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -165,6 +137,19 @@
               "time_displayed": 65.0,
               "color": 4278238420,
               "line_width": 2.0
+            }
+          },
+          {
+            "title": "test_start_time",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Robot/test_start_time",
+              "period": 0.06,
+              "data_type": "string"
             }
           }
         ]
@@ -203,9 +188,9 @@
           },
           {
             "title": "all",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -217,9 +202,9 @@
           },
           {
             "title": "valid",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -231,9 +216,9 @@
           },
           {
             "title": "batteryId",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 1088.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -247,7 +232,7 @@
             "title": "Start Vision",
             "x": 768.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
@@ -260,8 +245,8 @@
           {
             "title": "batteryIdSetter",
             "x": 768.0,
-            "y": 256.0,
-            "width": 256.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -282,8 +267,8 @@
           {
             "title": "RobotController.getBatteryVoltage",
             "x": 0.0,
-            "y": 256.0,
-            "width": 256.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -297,7 +282,7 @@
             "title": "batteryId",
             "x": 0.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -311,7 +296,7 @@
             "title": "heater_r",
             "x": 512.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -323,9 +308,9 @@
           },
           {
             "title": "i",
-            "x": 256.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 320.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -337,9 +322,9 @@
           },
           {
             "title": "j",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -352,8 +337,8 @@
           {
             "title": "v_loaded",
             "x": 768.0,
-            "y": 256.0,
-            "width": 256.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -367,7 +352,7 @@
             "title": "v_noload",
             "x": 768.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -380,8 +365,8 @@
           {
             "title": "w",
             "x": 512.0,
-            "y": 256.0,
-            "width": 256.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -395,7 +380,7 @@
             "title": "Set Simulated SOC",
             "x": 768.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
@@ -407,9 +392,9 @@
           },
           {
             "title": "j_remaining",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 1088.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -421,9 +406,9 @@
           },
           {
             "title": "Fancy Test Battery",
-            "x": 256.0,
+            "x": 320.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
@@ -435,9 +420,9 @@
           },
           {
             "title": "soc",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -451,7 +436,7 @@
             "title": "soc_setter",
             "x": 512.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
