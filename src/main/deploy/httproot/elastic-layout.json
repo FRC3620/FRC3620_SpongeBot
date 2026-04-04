@@ -1,6 +1,6 @@
 {
   "version": 1.0,
-  "grid_size": 128,
+  "grid_size": 64,
   "tabs": [
     {
       "name": "Test Battery",
@@ -10,7 +10,7 @@
           {
             "title": "batteryId",
             "x": 0.0,
-            "y": 128.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -19,20 +19,6 @@
               "period": 0.06,
               "data_type": "int",
               "show_submit_button": false
-            }
-          },
-          {
-            "title": "Test Battery",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Test Battery",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
             }
           },
           {
@@ -46,16 +32,16 @@
               "topic": "/Robot/v",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 20.0,
+              "time_displayed": 65.0,
               "color": 4278238420,
               "line_width": 2.0
             }
           },
           {
             "title": "j",
-            "x": 0.0,
+            "x": 128.0,
             "y": 384.0,
-            "width": 256.0,
+            "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -76,7 +62,7 @@
               "topic": "/Robot/pdb/j",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 20.0,
+              "time_displayed": 65.0,
               "color": 4278238420,
               "line_width": 2.0
             }
@@ -84,7 +70,7 @@
           {
             "title": "v",
             "x": 128.0,
-            "y": 128.0,
+            "y": 256.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -107,6 +93,63 @@
               "period": 0.06,
               "data_type": "string",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "Fancy Test Battery",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Fancy Test Battery",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "FancyTest",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/fsm/FancyTest",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "a",
+            "x": 256.0,
+            "y": 512.0,
+            "width": 1152.0,
+            "height": 256.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/Robot/H/a",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 65.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "test_start_time",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Robot/test_start_time",
+              "period": 0.06,
+              "data_type": "string"
             }
           }
         ]
@@ -145,9 +188,9 @@
           },
           {
             "title": "all",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -159,9 +202,9 @@
           },
           {
             "title": "valid",
-            "x": 1024.0,
+            "x": 1088.0,
             "y": 128.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -173,9 +216,9 @@
           },
           {
             "title": "batteryId",
-            "x": 1024.0,
-            "y": 256.0,
-            "width": 256.0,
+            "x": 1088.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -189,7 +232,7 @@
             "title": "Start Vision",
             "x": 768.0,
             "y": 0.0,
-            "width": 256.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
@@ -202,8 +245,8 @@
           {
             "title": "batteryIdSetter",
             "x": 768.0,
-            "y": 256.0,
-            "width": 256.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -235,24 +278,10 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Reset Simulated Battery",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Reset Simulated Battery",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
             "title": "RobotController.getBatteryVoltage",
-            "x": 512.0,
-            "y": 128.0,
-            "width": 256.0,
+            "x": 0.0,
+            "y": 320.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -264,9 +293,9 @@
           },
           {
             "title": "batteryId",
-            "x": 768.0,
-            "y": 128.0,
-            "width": 256.0,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -274,6 +303,160 @@
               "period": 0.06,
               "data_type": "int",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "heater_r",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/heater_r",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "i",
+            "x": 320.0,
+            "y": 320.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/i",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "j",
+            "x": 1088.0,
+            "y": 128.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/j",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "v_loaded",
+            "x": 768.0,
+            "y": 320.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/v_loaded",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "v_noload",
+            "x": 768.0,
+            "y": 128.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/v_noload",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "w",
+            "x": 512.0,
+            "y": 320.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/w",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Set Simulated SOC",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Set Simulated SOC",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "j_remaining",
+            "x": 1088.0,
+            "y": 320.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/j_remaining",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Fancy Test Battery",
+            "x": 320.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Fancy Test Battery",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "soc",
+            "x": 1088.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Robot/sim/soc",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "soc_setter",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "sim/soc_setter",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": true
             }
           }
         ]
