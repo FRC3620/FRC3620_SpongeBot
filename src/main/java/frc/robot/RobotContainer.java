@@ -18,6 +18,14 @@ import org.usfirst.frc3620.FakeDS;
 import org.usfirst.frc3620.RobotParametersContainer;
 import org.usfirst.frc3620.Utilities;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+
 import org.tinylog.TaggedLogger;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -277,8 +285,25 @@ public class RobotContainer {
 
       DogLog.log("v", batteryVoltage);
       DogLog.log("hb", hb);
+
+      if (timeOfTestStart == null) {
+        if (RobotController.isSystemTimeValid()) {
+          Instant now = Instant.now();
+          long microSecondsSinceStart = RobotController.getFPGATime();
+          Instant startup_time = now.minus(microSecondsSinceStart, ChronoUnit.MICROS);
+          ZoneId zoneId = ZoneId.of("America/Detroit");
+          timeOfTestStart = ZonedDateTime.ofInstant(startup_time, zoneId);
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+          String timeOfTestStart_text = timeOfTestStart.format(formatter);
+          logger.info("now = {}, running seconds = {} -> startup = {} (local {})", now, microSecondsSinceStart / 1000000.0, startup_time, timeOfTestStart_text);
+          DogLog.log("test_start_time", timeOfTestStart_text);
+        }
+      }
     }
+ 
   }
+
+  ZonedDateTime timeOfTestStart = null;
 
   public static double getBatteryVoltage() {
     return batteryVoltage;

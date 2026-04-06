@@ -1,9 +1,5 @@
 package frc.robot;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.usfirst.frc3620.Utilities.SlidingWindowStats;
 
 import dev.doglog.DogLog;
@@ -17,8 +13,6 @@ public class FancyTestCommand extends Command {
   StateMachine<FancyState> fsm;
 
   final static double UNLOADED_CUTOFF_VOLTAGE = v_for_soc(0.45);
-
-  ZonedDateTime timeOfTestStart = null;
 
   static double v_for_soc(double soc) {
     return 11.75 + (soc * 1.25);
@@ -35,6 +29,7 @@ public class FancyTestCommand extends Command {
   public void initialize() {
     DogLog.log("cutoff criteria", "mean of last 10 idle batteryVoltage < " + UNLOADED_CUTOFF_VOLTAGE);
     fsm.setState(restState);
+    DogLog.log(getName() + " running", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +43,7 @@ public class FancyTestCommand extends Command {
   public void end(boolean interrupted) {
     heaterSubsystem.setHeaterPower(0);
     fsm.setState(null);
+    DogLog.log(getName() + " running", false);
   }
 
   // Returns true when the command should end.
@@ -101,13 +97,6 @@ public class FancyTestCommand extends Command {
     Timer timer = new Timer();
 
     public void onEnter() {
-      if (timeOfTestStart == null) {
-        ZoneId zoneId = ZoneId.of("America/Detroit");
-        timeOfTestStart = ZonedDateTime.now(zoneId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
-        String timeOfTestStart_text = timeOfTestStart.format(formatter);
-        DogLog.log("test_start_time", timeOfTestStart_text);
-      }
       timer.reset();
       timer.start();
     }
