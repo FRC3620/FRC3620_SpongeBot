@@ -25,7 +25,7 @@
             "title": "v",
             "x": 256.0,
             "y": 0.0,
-            "width": 896.0,
+            "width": 1152.0,
             "height": 256.0,
             "type": "Graph",
             "properties": {
@@ -55,7 +55,7 @@
             "title": "j",
             "x": 256.0,
             "y": 256.0,
-            "width": 896.0,
+            "width": 1152.0,
             "height": 256.0,
             "type": "Graph",
             "properties": {
@@ -70,7 +70,7 @@
           {
             "title": "v",
             "x": 128.0,
-            "y": 256.0,
+            "y": 512.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -84,7 +84,7 @@
           {
             "title": "mode",
             "x": 0.0,
-            "y": 256.0,
+            "y": 512.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -112,7 +112,7 @@
           {
             "title": "FancyTest",
             "x": 0.0,
-            "y": 512.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -145,11 +145,12 @@
             "y": 128.0,
             "width": 256.0,
             "height": 128.0,
-            "type": "Large Text Display",
+            "type": "Text Display",
             "properties": {
               "topic": "/Robot/test_start_time",
               "period": 0.06,
-              "data_type": "string"
+              "data_type": "string",
+              "show_submit_button": false
             }
           }
         ]
